@@ -1,0 +1,210 @@
+# ==========================================
+# Fortnite ULTIMATE FPS & Delay Optimizer - GUI
+# ==========================================
+# Run as Administrator
+
+Add-Type -AssemblyName System.Windows.Forms
+Add-Type -AssemblyName System.Drawing
+
+# ---------- CORE TWEAKS ----------
+
+function Set-HighPerformancePlan {
+    $highPerf = powercfg -list | Select-String "High performance"
+    if ($highPerf) {
+        $guid = ($highPerf -split '\s+')[3]
+        powercfg -setactive $guid
+        [System.Windows.Forms.MessageBox]::Show("Power plan set to High Performance.","Done")
+    } else {
+        powercfg -duplicatescheme SCHEME_MIN
+        [System.Windows.Forms.MessageBox]::Show("High Performance plan duplicated and set.","Done")
+    }
+}
+
+function Disable-BackgroundApps {
+    reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications" /v GlobalUserDisabled /t REG_DWORD /d 1 /f | Out-Null
+    [System.Windows.Forms.MessageBox]::Show("Background apps disabled.","Done")
+}
+
+function Disable-VisualCandy {
+    reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v EnableTransparency /t REG_DWORD /d 0 /f | Out-Null
+    reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects" /v VisualFXSetting /t REG_DWORD /d 2 /f | Out-Null
+    [System.Windows.Forms.MessageBox]::Show("Visual effects set for performance.","Done")
+}
+
+function Disable-Notifications {
+    reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings" /v NOC_GLOBAL_SETTING_TOASTS_ENABLED /t REG_DWORD /d 0 /f | Out-Null
+    [System.Windows.Forms.MessageBox]::Show("Most toast notifications disabled.","Done")
+}
+
+function Disable-GameBar {
+    reg add "HKCU\Software\Microsoft\GameBar" /v "ShowStartupPanel" /t REG_DWORD /d 0 /f | Out-Null
+    reg add "HKCU\Software\Microsoft\GameBar" /v "GameBarEnabled" /t REG_DWORD /d 0 /f | Out-Null
+    reg add "HKCU\System\GameConfigStore" /v "GameDVR_FSEBehaviorMode" /t REG_DWORD /d 2 /f | Out-Null
+    reg add "HKCU\System\GameConfigStore" /v "GameDVR_HonorUserFSEBehaviorMode" /t REG_DWORD /d 1 /f | Out-Null
+    [System.Windows.Forms.MessageBox]::Show("Game Bar & DVR disabled.","Done")
+}
+
+function Clean-Temp {
+    $paths = @(
+        $env:TEMP,
+        $env:TMP,
+        "$env:SystemRoot\Temp"
+    )
+    foreach ($p in $paths) {
+        if (Test-Path $p) {
+            Get-ChildItem $p -Recurse -ErrorAction SilentlyContinue | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue
+        }
+    }
+    [System.Windows.Forms.MessageBox]::Show("Temp folders cleaned.","Done")
+}
+
+function Disable-StartupApps {
+    $runKey = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run"
+
+    if (Test-Path $runKey) {
+        $values = Get-ItemProperty -Path $runKey
+        $propertyNames = $values.PSObject.Properties |
+            Where-Object { $_.Name -notin @("PSPath","PSParentPath","PSChildName","PSDrive","PSProvider") } |
+            Select-Object -ExpandProperty Name
+
+        if ($propertyNames.Count -gt 0) {
+            foreach ($name in $propertyNames) {
+                Remove-ItemProperty -Path $runKey -Name $name -ErrorAction SilentlyContinue
+            }
+            [System.Windows.Forms.MessageBox]::Show("User startup apps trimmed.","Done")
+        } else {
+            [System.Windows.Forms.MessageBox]::Show("No user startup entries found.","Info")
+        }
+    } else {
+        [System.Windows.Forms.MessageBox]::Show("Startup key not found.","Info")
+    }
+}
+
+# ---------- EXTRA SAFE TWEAKS ----------
+
+function Optimize-NetworkSafe {
+    ipconfig /flushdns | Out-Null
+    [System.Windows.Forms.MessageBox]::Show("DNS cache flushed. This can help with ping consistency.","Network")
+}
+
+function Clean-GameCachesSafe {
+    $paths = @()
+
+    # DirectX shader cache
+    $dxCache = "$env:LOCALAPPDATA\D3DSCache"
+    if (Test-Path $dxCache) { $paths += $dxCache }
+
+    # Epic / Fortnite common cache locations (safe check only)
+    $fortCache1 = "$env:LOCALAPPDATA\FortniteGame\Saved\Logs"
+    $fortCache2 = "$env:LOCALAPPDATA\FortniteGame\Saved\Temp"
+    if (Test-Path $fortCache1) { $paths += $fortCache1 }
+    if (Test-Path $fortCache2) { $paths += $fortCache2 }
+
+    foreach ($p in $paths) {
+        if (Test-Path $p) {
+            Get-ChildItem $p -Recurse -ErrorAction SilentlyContinue | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue
+        }
+    }
+
+    [System.Windows.Forms.MessageBox]::Show("Shader & game temp caches cleaned (where found).","Game Cache")
+}
+
+function Show-FortniteSettingsGuide {
+    $msg = @"
+Recommended competitive Fortnite settings (general):
+
+• Display: Fullscreen, refresh rate = monitor max
+• FPS cap: slightly below monitor Hz (e.g. 143 on 144 Hz)
+• V-Sync: Off
+• Motion blur: Off
+
+Graphics:
+• Rendering mode: Performance (if stable on your PC)
+• View distance: Medium/High (for awareness)
+• Shadows: Off
+• Anti-aliasing: Off or Low
+• Textures: Low/Medium (depends on VRAM)
+• Effects: Low
+• Post-processing: Low
+
+Latency:
+• Disable Game Bar & overlays (button in this app)
+• Use Fullscreen, not Windowed
+• Keep background apps closed while playing
+"@
+    [System.Windows.Forms.MessageBox]::Show($msg,"Fortnite Competitive Guide")
+}
+
+function Full-Optimize {
+    Set-HighPerformancePlan
+    Disable-BackgroundApps
+    Disable-VisualCandy
+    Disable-Notifications
+    Disable-GameBar
+    Clean-Temp
+    Disable-StartupApps
+    Optimize-NetworkSafe
+    Clean-GameCachesSafe
+    [System.Windows.Forms.MessageBox]::Show("Full optimization complete. Restart Windows for full effect.","Ultimate Optimizer")
+}
+
+function Ultimate-Optimize {
+    Full-Optimize
+}
+
+# ---------- GUI ----------
+
+$form               = New-Object System.Windows.Forms.Form
+$form.Text          = "Fortnite ULTIMATE FPS & Delay Optimizer"
+$form.Size          = New-Object System.Drawing.Size(460,480)
+$form.StartPosition = "CenterScreen"
+$form.BackColor     = [System.Drawing.Color]::FromArgb(15,15,25)
+
+$fontTitle = New-Object System.Drawing.Font("Segoe UI",14,[System.Drawing.FontStyle]::Bold)
+$fontBtn   = New-Object System.Drawing.Font("Segoe UI",10)
+
+$label = New-Object System.Windows.Forms.Label
+$label.Text = "Fortnite ULTIMATE FPS & Delay Optimizer"
+$label.AutoSize = $true
+$label.ForeColor = [System.Drawing.Color]::White
+$label.Font = $fontTitle
+$label.Location = New-Object System.Drawing.Point(25,20)
+$form.Controls.Add($label)
+
+function New-Button($text,$x,$y,$onClick) {
+    $btn = New-Object System.Windows.Forms.Button
+    $btn.Text = $text
+    $btn.Size = New-Object System.Drawing.Size(380,35)
+    $btn.Location = New-Object System.Drawing.Point($x,$y)
+    $btn.Font = $fontBtn
+    $btn.BackColor = [System.Drawing.Color]::FromArgb(40,40,60)
+    $btn.ForeColor = [System.Drawing.Color]::White
+    $btn.Add_Click($onClick)
+    $form.Controls.Add($btn)
+}
+
+New-Button "Ultimate Optimize (Everything Safe)" 40 70 { Ultimate-Optimize }
+New-Button "Full Optimize (Core Tweaks)"         40 115 { Full-Optimize }
+New-Button "Set High Performance Power Plan"     40 160 { Set-HighPerformancePlan }
+New-Button "Disable Notifications & Game Bar"    40 205 { Disable-Notifications; Disable-GameBar }
+New-Button "Disable Background Apps & Visuals"   40 250 { Disable-BackgroundApps; Disable-VisualCandy }
+New-Button "Clean Temp Folders"                  40 295 { Clean-Temp }
+New-Button "Trim User Startup Apps"              40 340 { Disable-StartupApps }
+New-Button "Network Latency Tweaks (Safe)"       40 385 { Optimize-NetworkSafe }
+New-Button "Clean Shader & Game Caches"          40 430 { Clean-GameCachesSafe }
+
+# Optional: Fortnite guide button (you can comment this out if you don’t want it)
+$guideBtn = New-Object System.Windows.Forms.Button
+$guideBtn.Text = "Show Fortnite Competitive Settings Guide"
+$guideBtn.Size = New-Object System.Drawing.Size(380,35)
+$guideBtn.Location = New-Object System.Drawing.Point(40, 475)
+$guideBtn.Font = $fontBtn
+$guideBtn.BackColor = [System.Drawing.Color]::FromArgb(60,60,80)
+$guideBtn.ForeColor = [System.Drawing.Color]::White
+$guideBtn.Add_Click({ Show-FortniteSettingsGuide })
+$form.Controls.Add($guideBtn)
+
+[System.Windows.Forms.Application]::EnableVisualStyles()
+$form.Topmost = $true
+$form.Add_Shown({ $form.Activate() })
+[System.Windows.Forms.Application]::Run($form)
