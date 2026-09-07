@@ -1,431 +1,343 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Apollyon Tweak – Destroy Lag, Summon Pure Performance</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <style>
-    :root {
-      --bg: #05060a;
-      --accent: #ff3b6b;
-      --accent-soft: #ff9bb3;
-      --text: #f5f5f5;
-      --muted: #9ca3af;
-    }
+<meta charset="UTF-8" />
+<title>Apollyon Tweak – Fortnite Optimizer UI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+<style>
+/* ---------- COLORS ---------- */
+:root {
+  --bg: #0d0f16;
+  --panel: #151824;
+  --accent: #ff3b6b;
+  --accent-soft: #ff9bb3;
+  --text: #f5f5f5;
+  --muted: #9ca3af;
+  --border: #1f2333;
+}
 
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top, #111827 0, #020617 45%, #000000 100%);
-      color: var(--text);
-      min-height: 100vh;
-    }
+/* ---------- GLOBAL ---------- */
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
 
-    .wrapper {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 32px 20px 64px;
-    }
+.wrapper {
+  max-width: 1200px;
+  margin: auto;
+  padding: 30px;
+}
 
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 40px;
-    }
+/* ---------- HEADER ---------- */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+}
 
-    .logo {
-      font-weight: 800;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      font-size: 0.9rem;
-      color: var(--accent-soft);
-    }
+.logo {
+  font-size: 1.2rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: var(--accent-soft);
+}
 
-    .badge {
-      border-radius: 999px;
-      border: 1px solid #1f2937;
-      padding: 6px 14px;
-      font-size: 0.75rem;
-      color: var(--muted);
-      background: rgba(15, 23, 42, 0.8);
-    }
+.badge {
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  font-size: 0.75rem;
+  color: var(--muted);
+}
 
-    .hero {
-      display: grid;
-      grid-template-columns: minmax(0, 2.2fr) minmax(0, 1.8fr);
-      gap: 32px;
-      align-items: center;
-      margin-bottom: 48px;
-    }
+/* ---------- HERO ---------- */
+.hero {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+  margin-bottom: 40px;
+}
 
-    @media (max-width: 800px) {
-      .hero {
-        grid-template-columns: 1fr;
-      }
-    }
+.hero-title {
+  font-size: 2.4rem;
+  line-height: 1.1;
+}
 
-    .hero-title {
-      font-size: 2.6rem;
-      line-height: 1.1;
-      margin-bottom: 16px;
-    }
+.hero-title span {
+  color: var(--accent);
+}
 
-    .hero-title span {
-      color: var(--accent);
-    }
+.hero-sub {
+  margin-top: 12px;
+  color: var(--muted);
+  max-width: 480px;
+}
 
-    .hero-sub {
-      font-size: 0.98rem;
-      color: var(--muted);
-      max-width: 480px;
-      margin-bottom: 24px;
-    }
+.hero-actions {
+  margin-top: 20px;
+  display: flex;
+  gap: 12px;
+}
 
-    .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-bottom: 18px;
-    }
+.btn {
+  padding: 10px 22px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border: none;
+}
 
-    .btn-primary {
-      background: var(--accent);
-      color: #0b0b0f;
-      border-radius: 999px;
-      padding: 10px 22px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      border: none;
-      cursor: pointer;
-      box-shadow: 0 0 24px rgba(255, 59, 107, 0.45);
-    }
+.btn-primary {
+  background: var(--accent);
+  color: #0d0f16;
+  box-shadow: 0 0 20px rgba(255, 59, 107, 0.4);
+}
 
-    .btn-ghost {
-      background: transparent;
-      color: var(--text);
-      border-radius: 999px;
-      padding: 10px 22px;
-      font-size: 0.9rem;
-      border: 1px solid #374151;
-      cursor: pointer;
-    }
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
 
-    .hero-meta {
-      font-size: 0.8rem;
-      color: var(--muted);
-    }
+/* ---------- SIDE STATS ---------- */
+.stats-bar {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+}
 
-    .hero-card {
-      border-radius: 18px;
-      padding: 18px 18px 20px;
-      background: radial-gradient(circle at top left, #1f2937 0, #020617 55%);
-      border: 1px solid #1f2937;
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7);
-    }
+.stats-title {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
 
-    .hero-card-title {
-      font-size: 0.9rem;
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      color: var(--muted);
-      margin-bottom: 10px;
-    }
+.stat {
+  margin-bottom: 12px;
+}
 
-    .hero-card-main {
-      font-size: 1.1rem;
-      margin-bottom: 14px;
-    }
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
 
-    .stat-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
-      margin-bottom: 14px;
-    }
+.stat-value {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--accent-soft);
+}
 
-    .stat {
-      border-radius: 12px;
-      padding: 10px 10px 12px;
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid #111827;
-    }
+/* ---------- OPTIMIZER PANEL ---------- */
+.optimizer {
+  margin-top: 40px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+}
 
-    .stat-label {
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--muted);
-      margin-bottom: 4px;
-    }
+.opt-title {
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
 
-    .stat-value {
-      font-size: 1rem;
-      font-weight: 600;
-    }
+.opt-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
 
-    .stat-tag {
-      font-size: 0.7rem;
-      color: var(--accent-soft);
-    }
+.opt-btn {
+  background: #1b1e2d;
+  border: 1px solid var(--border);
+  padding: 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: center;
+  font-size: 0.9rem;
+  transition: 0.2s;
+}
 
-    .hero-card-footer {
-      font-size: 0.75rem;
-      color: var(--muted);
-    }
+.opt-btn:hover {
+  background: #232738;
+  transform: scale(1.03);
+}
 
-    section {
-      margin-bottom: 40px;
-    }
+/* ---------- POPUP ---------- */
+.popup-bg {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  justify-content: center;
+  align-items: center;
+}
 
-    .section-title {
-      font-size: 1.1rem;
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-      color: var(--muted);
-      margin-bottom: 16px;
-    }
+.popup {
+  background: var(--panel);
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  max-width: 300px;
+  text-align: center;
+}
 
-    .pill-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 16px;
-    }
+.popup-close {
+  margin-top: 10px;
+  padding: 8px 16px;
+  background: var(--accent);
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+}
 
-    .pill {
-      border-radius: 999px;
-      border: 1px solid #1f2937;
-      padding: 6px 14px;
-      font-size: 0.8rem;
-      color: var(--muted);
-      background: rgba(15, 23, 42, 0.8);
-    }
+/* ---------- SECTIONS ---------- */
+.section-title {
+  margin-top: 40px;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+}
 
-    .grid-3 {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 18px;
-    }
+.grid-3 {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
 
-    @media (max-width: 900px) {
-      .grid-3 {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 16px;
+  border-radius: 12px;
+}
 
-    @media (max-width: 640px) {
-      .grid-3 {
-        grid-template-columns: 1fr;
-      }
-    }
+.card-label {
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
 
-    .card {
-      border-radius: 16px;
-      padding: 14px 14px 16px;
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid #111827;
-    }
+.card-title {
+  font-size: 1rem;
+  margin-bottom: 6px;
+}
 
-    .card-label {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      color: var(--muted);
-      margin-bottom: 6px;
-    }
+.card-body {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
 
-    .card-title {
-      font-size: 0.98rem;
-      margin-bottom: 6px;
-    }
+/* ---------- FOOTER ---------- */
+footer {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+</style>
 
-    .card-body {
-      font-size: 0.85rem;
-      color: var(--muted);
-    }
+<script>
+function openPopup(text) {
+  document.getElementById("popup-text").innerText = text;
+  document.getElementById("popup-bg").style.display = "flex";
+}
 
-    .highlight {
-      color: var(--accent-soft);
-    }
+function closePopup() {
+  document.getElementById("popup-bg").style.display = "none";
+}
+</script>
 
-    footer {
-      border-top: 1px solid #111827;
-      margin-top: 32px;
-      padding-top: 18px;
-      font-size: 0.75rem;
-      color: var(--muted);
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    a {
-      color: var(--accent-soft);
-      text-decoration: none;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-  </style>
 </head>
 <body>
-  <div class="wrapper">
-    <header>
-      <div class="logo">APOLLYON TWEAK</div>
-      <div class="badge">Destroy bad frames. Summon pure performance.</div>
-    </header>
 
-    <main>
-      <section class="hero">
-        <div>
-          <h1 class="hero-title">
-            <span>Apollyon Tweak</span><br />
-            deletes all the bad stuff<br />
-            and feeds your FPS.
-          </h1>
-          <p class="hero-sub">
-            Built to hunt down every hidden delay, packet stutter, and background hog,
-            then obliterate it. Apollyon Tweak turns your setup into a clean,
-            ruthless performance machine—so every click, shot, and movement lands
-            exactly when you expect it.
-          </p>
+<div class="wrapper">
 
-          <div class="hero-actions">
-            <button class="btn-primary">Deploy Apollyon Mode</button>
-            <button class="btn-ghost">View tweak philosophy</button>
-          </div>
+<header>
+  <div class="logo">APOLLYON TWEAK</div>
+  <div class="badge">Fortnite Optimizer Mode</div>
+</header>
 
-          <p class="hero-meta">
-            No fake “magic.” Just aggressive cleanup, smart routing, and
-            performance-first tuning focused on <span class="highlight">FPS, ping, and input delay</span>.
-          </p>
-        </div>
+<div class="hero">
+  <div>
+    <h1 class="hero-title"><span>Apollyon Tweak</span><br>Fortnite Performance Destroyer</h1>
+    <p class="hero-sub">Deletes lag, stabilizes ping, reduces delay, and boosts FPS using aggressive optimization logic.</p>
 
-        <aside class="hero-card">
-          <div class="hero-card-title">Live performance snapshot</div>
-          <div class="hero-card-main">
-            Before Apollyon: noisy, unstable, random lag spikes.<br />
-            After Apollyon: quiet, locked-in, razor response.
-          </div>
-
-          <div class="stat-grid">
-            <div class="stat">
-              <div class="stat-label">Average FPS</div>
-              <div class="stat-value">+35%</div>
-              <div class="stat-tag">Bad frames purged</div>
-            </div>
-            <div class="stat">
-              <div class="stat-label">Ping stability</div>
-              <div class="stat-value">Ultra steady</div>
-              <div class="stat-tag">No random jumps</div>
-            </div>
-            <div class="stat">
-              <div class="stat-label">Input delay</div>
-              <div class="stat-value">Feels instant</div>
-              <div class="stat-tag">Click → action</div>
-            </div>
-          </div>
-
-          <div class="hero-card-footer">
-            Apollyon doesn’t “boost” fake numbers—it removes everything that slows you down,
-            then lets your hardware breathe at full power.
-          </div>
-        </aside>
-      </section>
-
-      <section>
-        <h2 class="section-title">What Apollyon destroys</h2>
-
-        <div class="pill-row">
-          <div class="pill">Background junk processes</div>
-          <div class="pill">Hidden update services</div>
-          <div class="pill">Bloated startup tasks</div>
-          <div class="pill">Noisy network chatter</div>
-          <div class="pill">Misconfigured game settings</div>
-          <div class="pill">Unoptimized OS behavior</div>
-        </div>
-
-        <div class="grid-3">
-          <div class="card">
-            <div class="card-label">Lag purge</div>
-            <div class="card-title">Kills delay at the source</div>
-            <p class="card-body">
-              Apollyon Tweak hunts down the tiny things that stack into big lag:
-              background tasks, useless overlays, and hidden services that steal
-              milliseconds. Those milliseconds become frames—and frames become wins.
-            </p>
-          </div>
-
-          <div class="card">
-            <div class="card-label">Ping discipline</div>
-            <div class="card-title">Keeps your connection clean</div>
-            <p class="card-body">
-              By stripping noisy traffic and prioritizing game data, Apollyon
-              turns your route into a dedicated lane. Less jitter, fewer spikes,
-              more trust in what you see on screen.
-            </p>
-          </div>
-
-          <div class="card">
-            <div class="card-label">Input reality</div>
-            <div class="card-title">Your hands, without the delay</div>
-            <p class="card-body">
-              Every click and keypress should feel like it teleports straight into
-              the game. Apollyon cuts the invisible drag so your muscle memory
-              finally matches what happens in-game.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section>
-        <h2 class="section-title">What Apollyon gives you</h2>
-
-        <div class="grid-3">
-          <div class="card">
-            <div class="card-label">Pure focus</div>
-            <div class="card-title">Only the frames that matter</div>
-            <p class="card-body">
-              No more wondering if it was lag or skill. Apollyon gives you a
-              clean environment where every mistake is real—and every clutch is earned.
-            </p>
-          </div>
-
-          <div class="card">
-            <div class="card-label">Stable FPS</div>
-            <div class="card-title">Locked, not just “high”</div>
-            <p class="card-body">
-              Spikes and drops are the enemy. Apollyon aims for consistency:
-              smooth motion, predictable timing, and a game that feels the same
-              every round, every match.
-            </p>
-          </div>
-
-          <div class="card">
-            <div class="card-label">Confidence</div>
-            <div class="card-title">You trust your setup again</div>
-            <p class="card-body">
-              When your system stops fighting you, you stop second-guessing.
-              Apollyon Tweak is built so you can queue, lock in, and know your
-              rig is fully on your side.
-            </p>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <footer>
-      <div>© Apollyon Tweak — Destroy bad performance. Keep only what makes you faster.</div>
-      <div>Future: download, profiles, and per-game presets coming soon.</div>
-    </footer>
+    <div class="hero-actions">
+      <button class="btn btn-primary">Deploy Apollyon Mode</button>
+      <button class="btn btn-ghost">View tweak philosophy</button>
+    </div>
   </div>
+
+  <div class="stats-bar">
+    <div class="stats-title">Live Fortnite Stats</div>
+
+    <div class="stat">
+      <div class="stat-label">FPS</div>
+      <div class="stat-value">180–220</div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-label">Ping</div>
+      <div class="stat-value">10–20ms</div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-label">Input Delay</div>
+      <div class="stat-value">Low</div>
+    </div>
+  </div>
+</div>
+
+<div class="optimizer">
+  <div class="opt-title">Fortnite Optimizer Panel</div>
+
+  <div class="opt-grid">
+    <div class="opt-btn" onclick="openPopup('Ultimate Optimize: Full system cleanup + Fortnite tuning.')">Ultimate Optimize</div>
+    <div class="opt-btn" onclick="openPopup('Full Optimize: Core tweaks applied.')">Full Optimize</div>
+    <div class="opt-btn" onclick="openPopup('High Performance Power Plan enabled.')">High Performance Mode</div>
+    <div class="opt-btn" onclick="openPopup('Notifications & Game Bar disabled.')">Disable Game Bar</div>
+    <div class="opt-btn" onclick="openPopup('Background apps trimmed.')">Trim Background Apps</div>
+    <div class="opt-btn" onclick="openPopup('Temp folders cleaned.')">Clean Temp</div>
+    <div class="opt-btn" onclick="openPopup('Network latency tweaks applied.')">Network Tweaks</div>
+    <div class="opt-btn" onclick="openPopup('Shader caches cleaned.')">Clean Shader Cache</div>
+  </div>
+</div>
+
+<div id="popup-bg" class="popup-bg">
+  <div class="popup">
+    <div id="popup-text">Popup text</div>
+    <button class="popup-close" onclick="closePopup()">Close</button>
+  </div>
+</div>
+
+<h2 class="section-title">What Apollyon Destroys</h2>
+<div class="grid-3">
+  <div class="card"><div class="card-label">Lag Purge</div><div class="card-title">Kills Delay</div><p class="card-body">Removes hidden processes causing lag.</p></div>
+  <div class="card"><div class="card-label">Ping Discipline</div><div class="card-title">Stable Connection</div><p class="card-body">Reduces jitter and packet noise.</p></div>
+  <div class="card"><div class="card-label">Input Reality</div><div class="card-title">Instant Response</div><p class="card-body">Makes clicks feel instant.</p></div>
+</div>
+
+<footer>
+  © Apollyon Tweak — Fortnite Optimizer Edition
+</footer>
+
+</div>
+
 </body>
 </html>
